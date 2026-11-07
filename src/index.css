@@ -1,0 +1,173 @@
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/inter/index.css';
+@import 'tailwindcss';
+
+@theme {
+  --color-carbon: #0b0c0e;
+  --color-graphite: #141619;
+  --color-graphite-2: #1c1f23;
+  --color-paper: #f5f4f1;
+  --color-paper-2: #eae8e3;
+  --color-metal: #8e9296;
+  --color-steel: #5b5f64; /* gris para texto secundario sobre fondos claros */
+  --color-line-dark: rgb(255 255 255 / 0.12);
+  --color-line-light: rgb(11 12 14 / 0.14);
+  --color-signal: #bd3434;
+  --color-signal-hover: #a52b2b;
+
+  --font-display: 'Archivo Variable', 'Arial Narrow', sans-serif;
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-carbon font-sans text-paper antialiased;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--color-signal);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  /* Titular de gran formato: Archivo estrecha, muy compacta */
+  .display {
+    font-family: var(--font-display);
+    font-stretch: 72%;
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  /* Etiqueta pequeña con espaciado */
+  .label {
+    font-family: var(--font-display);
+    font-stretch: 100%;
+    font-weight: 600;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .container-x {
+    @apply mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-12;
+  }
+
+  .btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2.5 px-6 text-[0.95rem] font-semibold transition-[background-color,color,border-color,transform] duration-200 ease-out-soft;
+    font-family: var(--font-display);
+    font-stretch: 100%;
+    letter-spacing: 0.02em;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn-primary {
+    @apply bg-signal text-white hover:bg-signal-hover;
+  }
+  .btn-light {
+    @apply bg-paper text-carbon hover:bg-white;
+  }
+  .btn-outline-light {
+    @apply border border-white/30 text-paper hover:border-white hover:bg-white/5;
+  }
+  .btn-outline-dark {
+    @apply border border-carbon/25 text-carbon hover:border-carbon hover:bg-carbon/[0.04];
+  }
+
+  /* Enlace con subrayado que crece */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s var(--ease-out-soft);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* Aparición al hacer scroll (solo si el JS lo activa y no hay reduced motion) */
+.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.8s var(--ease-out-soft),
+    transform 0.8s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js-reveal [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Entrada del hero: corta, para no retrasar la lectura */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* La foto del hero es visible desde el primer instante: solo se asienta un poco */
+@keyframes settle {
+  from {
+    transform: scale(1.07);
+  }
+  to {
+    transform: scale(1.02);
+  }
+}
+.anim-rise {
+  animation: rise 0.9s var(--ease-out-soft) both;
+  animation-delay: var(--d, 0ms);
+}
+.anim-settle {
+  animation: settle 1.8s var(--ease-out-soft) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .js-reveal [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
